@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wounds</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        #spinner {
+            display: none;
+        }
+
+        #output {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Wound Surface Area Detection</h2>
+    <form id="uploadForm" enctype='multipart/form-data'>
+        <div class="form-group">
+            <label for="fileInput">Select File</label>
+            <input id="fileInput" name='file' type='file' class="form-control-file">
+        </div>
+        <div class="alert alert-primary" role="alert">
+            Upload valid jpg or png image of square dimensions that only has wound in the image!
+        </div>
+        <button type='button' id="submitButton" class="btn btn-primary">Submit</button>
+    </form>
+    <div id="spinner" class="mt-3">Loading...</div>
+    <div id="output" class="mt-3">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Detail</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">original_name</th>
+                <td id="original_name">NA</td>
+
+            </tr>
+            <tr>
+                <th scope="row">new_name</th>
+                <td id="new_name">NA</td>
+
+            </tr>
+            <tr>
+                <th scope="row">white_pixels</th>
+                <td id="white_pixels">NA</td>
+
+            </tr>
+
+            <tr>
+                <th scope="row">black_pixels</th>
+                <td id="black_pixels">NA</td>
+            </tr>
+
+            <tr>
+                <th scope="row">wound_size</th>
+                <td id="wound_size">NA</td>
+            </tr>
+
+            <tr>
+                <th scope="row">image</th>
+                <td id="image">NA</td>
+
+            </tr>
+
+
+            </tbody>
+        </table>
+
+        <img id="dynamicImage" src="" alt="wound" width="224" height="224">
+
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#submitButton').on('click', function () {
+            var formData = new FormData($('#uploadForm')[0]);
+
+            // Display spinner
+            $('#spinner').show();
+
+            $.ajax({
+                url: '/upload',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    // Hide spinner
+                    $('#spinner').hide();
+                    $('#output').show();
+                    console.log(response);
+                    // Display output
+                    $('#original_name').html(response.original_name);
+                    $('#new_name').html(response.new_name);
+                    $('#white_pixels').html(response.white_pixels);
+                    $('#black_pixels').html(response.black_pixels);
+                    $('#wound_size').html(response.wound_size + "%");
+                    $('#image').html(response.file_path);
+                    $('#dynamicImage').attr('src', response.file_path)
+                },
+                error: function (err) {
+                    // Hide spinner
+                    $('#spinner').hide();
+                    console.log(err)
+
+                    // Display error message
+                    $('#output').html('An error occurred.');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
