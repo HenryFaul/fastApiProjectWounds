@@ -1,15 +1,12 @@
-import cv2
 from keras.models import load_model
 from models.deeplab import Deeplabv3, relu6, BilinearUpsampling, DepthwiseConv2D
 from utils.learning.metrics import dice_coef, precision, recall
 from utils.io.data_custom import save_results_custom, save_rgb_results, save_history, load_test_images, DataGenCustom
-import time
 
 # settings
 input_dim_x = 224
 input_dim_y = 224
 color_space = 'rgb'
-#path = './picture_uploads/test/'
 weight_file_name = '2019-12-19 01%3A53%3A15.480800.hdf5'
 pred_save_path = './static/picture_uploads/generated_predictions/'
 
