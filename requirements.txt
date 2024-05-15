@@ -1,5 +1,6 @@
 ###### Requirements without Version Specifiers ######
 aiofiles
+nvidia-smi
 ###### Requirements with Version Specifiers ######
 #   See https://www.python.org/dev/peps/pep-0440/#version-specifiers
 
