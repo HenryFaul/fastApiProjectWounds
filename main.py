@@ -1,48 +1,30 @@
-import io
 from fastapi import FastAPI, Request, UploadFile, HTTPException, status
 from predict2 import make_prediction
-from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-import aiofiles
-import os
 from PIL import Image
-import time
-from fastapi.templating import Jinja2Templates
-from starlette.responses import FileResponse
-from fastapi.encoders import jsonable_encoder
+from fastapi.responses import FileResponse
 from fastapi.responses import JSONResponse
-
+import io
+import os
+import time
 
 UPLOAD_DIRECTORY = './static/picture_uploads/raw_uploads/'
 RESIZED_DIRECTORY = './static/picture_uploads/resized_uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = FastAPI()
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/")
 async def main():
-    content = '''
-    <body>
-    <form action='/upload' enctype='multipart/form-data' method='post'>
-    <input name='file' type='file'>
-    <input type='submit'>
-    </form>
-    </body>
-    '''
     return FileResponse('./static/index.html')
 
 
 @app.get("/hello/{name}")
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
-
-
-@app.get("/predict/{name}")
-async def predict(name: str):
-    res = make_prediction()
-    return {"message": f"{res}"}
 
 
 @app.post('/upload')
@@ -89,5 +71,3 @@ async def upload(file: UploadFile, request: Request):
         )
     finally:
         await file.close()
-
-
